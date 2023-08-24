@@ -45,7 +45,7 @@ public class Card : MonoBehaviour
 
     public enum CardPattern
     {
-        apple,grape,strawberry,watermelon
+        none,apple,grape,strawberry,watermelon
 
     }
 

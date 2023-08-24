@@ -30,7 +30,7 @@ public class GameManager : MonoBehaviour
         {
                cardsToBePutIn.Add((Card.CardPattern)item);//強制轉型態 
         }
-        //cardsToBePutIn.RemoveAt(0);//刪掉CardPattern.none
+        cardsToBePutIn.RemoveAt(0);//刪掉CardPattern.none
         
     } 
 
