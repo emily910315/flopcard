@@ -10,7 +10,7 @@ public class Card : MonoBehaviour
 
     void Start()
     {
-        cardState = CardState.colse;
+        cardState = CardState.close;
         gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();//找GameManager標籤的物件連接至GameManager內
 
 
@@ -19,7 +19,7 @@ public class Card : MonoBehaviour
     public enum CardState
     {   
         //卡牌狀態
-        open,colse,win
+        close,open,win
     }
 
     private void OnMouseUp()//滑鼠點擊時的狀態

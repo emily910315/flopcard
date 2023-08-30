@@ -45,7 +45,7 @@ public class GameManager : MonoBehaviour
             for(int j = 0; j < maxRandomNunber; maxRandomNunber--)
             {
                 int randomNumber = UnityEngine.Random.Range(0, maxRandomNunber);//產生0-3的亂數         
-                AddNewCard(cardsToBePutIn[randomNumber],0);//抽卡牌
+                AddNewCard(cardsToBePutIn[randomNumber],positionIndex);//抽卡牌
                 cardsToBePutIn.RemoveAt(randomNumber);//抽過的移除
                 positionIndex++;
             }
@@ -67,6 +67,8 @@ public class GameManager : MonoBehaviour
         graphic.transform.SetParent(card.transform);//變卡牌的子物件
         graphic.transform.localPosition = new Vector3(0, 0, 0.1f);//設定座標
         graphic.transform.eulerAngles = new Vector3(0, 180, 0);//順著y軸轉180度(翻轉時不會左右顛倒)
+
+        
     }
 
     public void AddCardInCardComparison(Card card)//卡牌放入清單
@@ -131,7 +133,7 @@ public class GameManager : MonoBehaviour
         {
             //卡牌蓋回去
             card.gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
-            card.cardState = Card.CardState.open;
+            card.cardState = Card.CardState.close;
         }
     }
 
