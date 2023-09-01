@@ -7,15 +7,29 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour
 {
     [Header("Compare card list")]
-    public List<Card> cardComparison;//卡牌比對清單
+    [SerializeField] private List<Card> cardComparison;//卡牌比對清單
 
-    [Header("cardpattern list")]
     public List<Card.CardPattern> cardsToBePutIn;//卡牌總類清單
 
-    public Transform[] positions;
+    [SerializeField] private Transform[] positions;
 
     [Header("number of compare card is win")]
     int matchedCardsCount = 0;
+
+    private static GameManager m_instance = null;
+
+    public static GameManager Instance
+    {
+        get
+        {
+            //無找到GameManager，則創建一個GameManager
+            if (m_instance == null)
+            {
+                m_instance = FindObjectOfType<GameManager>();
+            }
+            return m_instance;
+        }
+    }
 
     void Start()
     {
@@ -23,39 +37,36 @@ public class GameManager : MonoBehaviour
         //AddNewCard(Card.CardPattern.apple);
         GenerateRandomCards();
     }
+
     void SetCardToBePutIn()//enum轉list
     {
         Array array = Enum.GetValues(typeof(Card.CardPattern));
-        foreach(var item in array)
+        foreach (var item in array)
         {
-               cardsToBePutIn.Add((Card.CardPattern)item);//強制轉型態 
+            cardsToBePutIn.Add((Card.CardPattern)item);//強制轉型態 
         }
         cardsToBePutIn.RemoveAt(0);//刪掉CardPattern.none
-        
-    } 
+    }
 
     void GenerateRandomCards()//發卡牌
     {
         int positionIndex = 0;
-        for (int i = 0; i < 2;i++)
+        for (int i = 0; i < 2; i++)
         {
             SetCardToBePutIn();//準備卡牌
             int maxRandomNunber = cardsToBePutIn.Count;//最大亂數不超過4
 
-            for(int j = 0; j < maxRandomNunber; maxRandomNunber--)
+            for (int j = 0; j < maxRandomNunber; maxRandomNunber--)
             {
                 int randomNumber = UnityEngine.Random.Range(0, maxRandomNunber);//產生0-3的亂數         
-                AddNewCard(cardsToBePutIn[randomNumber],positionIndex);//抽卡牌
+                AddNewCard(cardsToBePutIn[randomNumber], positionIndex);//抽卡牌
                 cardsToBePutIn.RemoveAt(randomNumber);//抽過的移除
                 positionIndex++;
             }
         }
-
-        
-
-        
     }
-    void AddNewCard(Card.CardPattern cardPattern,int positionIndex)
+
+    void AddNewCard(Card.CardPattern cardPattern, int positionIndex)
     {
         GameObject card = Instantiate(Resources.Load<GameObject>("prefabs/card"));//Resources裡面讀取card物件
         card.GetComponent<Card>().cardPattern = cardPattern;//從Card腳本中取得卡牌總類
@@ -67,8 +78,6 @@ public class GameManager : MonoBehaviour
         graphic.transform.SetParent(card.transform);//變卡牌的子物件
         graphic.transform.localPosition = new Vector3(0, 0, 0.1f);//設定座標
         graphic.transform.eulerAngles = new Vector3(0, 180, 0);//順著y軸轉180度(翻轉時不會左右顛倒)
-
-        
     }
 
     public void AddCardInCardComparison(Card card)//卡牌放入清單
@@ -101,7 +110,7 @@ public class GameManager : MonoBehaviour
             if (cardComparison[0].cardPattern == cardComparison[1].cardPattern)
             {
                 Debug.Log("card is same");
-                foreach(var card in cardComparison)
+                foreach (var card in cardComparison)
                 {
                     //配對成功
                     card.cardState = Card.CardState.win;
@@ -129,7 +138,7 @@ public class GameManager : MonoBehaviour
 
     void TurnBackCards()
     {
-        foreach(var card in cardComparison)
+        foreach (var card in cardComparison)
         {
             //卡牌蓋回去
             card.gameObject.transform.eulerAngles = new Vector3(0, 0, 0);
@@ -148,7 +157,6 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3);//3秒過後重洗卡牌
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-
     }
 
 }

@@ -6,20 +6,17 @@ public class Card : MonoBehaviour
 {
     public CardState cardState;//卡牌狀態
     public CardPattern cardPattern;//卡牌總類
-    public GameManager gameManager;
 
     void Start()
     {
         cardState = CardState.close;
-        gameManager = GameObject.FindGameObjectWithTag("GameManager").GetComponent<GameManager>();//找GameManager標籤的物件連接至GameManager內
-
-
-
+        OnMouseUp();
     }
+
     public enum CardState
-    {   
+    {
         //卡牌狀態
-        close,open,win
+        close, open, win
     }
 
     private void OnMouseUp()//滑鼠點擊時的狀態
@@ -28,15 +25,15 @@ public class Card : MonoBehaviour
         {
             return;
         }
-        if (gameManager.ReadyToCompareCards)//如果兩張卡牌已打開就不能再開其他卡牌
+        if (GameManager.Instance.ReadyToCompareCards)//如果兩張卡牌已打開就不能再開其他卡牌
         {
             return;
         }
         OpenCard();
-        gameManager.AddCardInCardComparison(this);//翻開的卡牌加入比對清單
-        gameManager.CompareCardsInList();
-
+        GameManager.Instance.AddCardInCardComparison(this);//翻開的卡牌加入比對清單
+        GameManager.Instance.CompareCardsInList();
     }
+
     void OpenCard()
     {
         transform.eulerAngles = new Vector3(0, 180, 0);//讓卡牌翻面(旋轉180度)
@@ -45,8 +42,7 @@ public class Card : MonoBehaviour
 
     public enum CardPattern
     {
-        none,apple,grape,strawberry,watermelon
-
+        none, apple, grape, strawberry, watermelon
     }
 
 }
