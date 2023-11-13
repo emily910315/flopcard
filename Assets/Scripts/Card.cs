@@ -11,7 +11,7 @@ public class Card : MonoBehaviour
     void Start()
     {
         cardState = CardState.close;
-        OnMouseUp();
+        //OnMouseUp();
     }
 
     public enum CardState
@@ -33,6 +33,13 @@ public class Card : MonoBehaviour
         OpenCard();
         GameManager.Instance.AddCardInCardComparison(this);//翻開的卡牌加入比對清單
         GameManager.Instance.CompareCardsInList();
+
+        
+        // 增加 clickCount 只在卡片實際翻開的時候
+        if (cardState == Card.CardState.open)
+            {
+                GameManager.Instance.grade();
+            }
     }
 
     void OpenCard()

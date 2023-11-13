@@ -15,7 +15,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject win;
 
     public Text textshow;
-    int a = 1;
+    public int clickCount = 0;
+
 
     [Header("Compare card list")]
     [SerializeField] private List<Card> cardComparison;//卡牌比對清單
@@ -93,12 +94,14 @@ public class GameManager : MonoBehaviour
 
     private void Update()
     {
-        textshow.text = ("你總共花了:"+a+"次點擊");
+        
+            textshow.text = "你總共花了:" + clickCount + "次點擊";
+        
     }
 
     public void grade()
     {
-        a++;
+        clickCount++;
     }
 
 
@@ -112,30 +115,21 @@ public class GameManager : MonoBehaviour
         cardsToBePutIn.RemoveAt(0);//刪掉CardPattern.none
     }
 
-    void GenerateRandomCards()//發卡牌
-    {
-        int positionIndex = 0;
-        for (int i = 0; i < 2; i++)
-        {
-            SetCardToBePutIn();//準備卡牌
-            int maxRandomNunber = cardsToBePutIn.Count;//最大亂數不超過4
-
-            for (int j = 0; j < maxRandomNunber; maxRandomNunber--)
-            {
-                int randomNumber = UnityEngine.Random.Range(0, maxRandomNunber);//產生0-3的亂數         
-                AddNewCard(cardsToBePutIn[randomNumber], positionIndex);//抽卡牌
-                cardsToBePutIn.RemoveAt(randomNumber);//抽過的移除
-                positionIndex++;
-            }
-        }
-    }
+    
 
     void AddNewCard(Card.CardPattern cardPattern, int positionIndex)
     {
         GameObject card = Instantiate(Resources.Load<GameObject>("prefabs/card"));//Resources裡面讀取card物件
+
+        Card cardComponent = card.GetComponent<Card>();       
+        cardComponent.cardPattern = cardPattern;// 設置卡片的總類
+        cardComponent.cardState = Card.CardState.close;// 確保新生成的卡片是蓋著的
+
         card.GetComponent<Card>().cardPattern = cardPattern;//從Card腳本中取得卡牌總類
         card.name = "card_" + cardPattern.ToString();//把card和卡牌總類轉為文字
         card.transform.position = positions[positionIndex].position;//陣列裡面編號物件的位置套用至卡牌位置座標
+        //cardComponent.cardState = Card.CardState.close;
+        //card.GetComponent<Card>().cardState = Card.CardState.close;// 確保新生成的卡片是蓋著的
 
         GameObject graphic = Instantiate(Resources.Load<GameObject>("prefabs/graphic"));//Resources裡面讀取graphic物件
         graphic.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("graphic/" + cardPattern.ToString());////Resources裡面讀取graphic物件，抓取卡牌總類(物件)，最後轉為文字
@@ -187,7 +181,8 @@ public class GameManager : MonoBehaviour
                     wait();
                     win.SetActive(true);
 
-                }
+                }               
+                clickCount++;// 在這裡增加點擊次數
             }
             else
             {
@@ -229,6 +224,24 @@ public class GameManager : MonoBehaviour
     IEnumerable wait()
     {
         yield return new WaitForSeconds(2);
+    }
+
+    void GenerateRandomCards()//發卡牌
+    {
+        int positionIndex = 0;
+        for (int i = 0; i < 2; i++)
+        {
+            SetCardToBePutIn();//準備卡牌
+            int maxRandomNunber = cardsToBePutIn.Count;//最大亂數不超過4
+
+            for (int j = 0; j < maxRandomNunber; maxRandomNunber--)
+            {
+                int randomNumber = UnityEngine.Random.Range(0, maxRandomNunber);//產生0-3的亂數         
+                AddNewCard(cardsToBePutIn[randomNumber], positionIndex);//抽卡牌
+                cardsToBePutIn.RemoveAt(randomNumber);//抽過的移除
+                positionIndex++;
+            }
+        }
     }
 
 }
