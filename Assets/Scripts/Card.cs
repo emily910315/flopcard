@@ -6,6 +6,7 @@ public class Card : MonoBehaviour
 {
     public CardState cardState;//卡牌狀態
     public CardPattern cardPattern;//卡牌總類
+    
 
     void Start()
     {

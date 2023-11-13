@@ -3,9 +3,20 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
+    [SerializeField]GameObject bg;
+    [SerializeField] GameObject title;
+    [SerializeField] GameObject startbutton;
+    [SerializeField] GameObject intructionbutton;
+    [SerializeField] GameObject instruction;
+    [SerializeField] GameObject win;
+
+    public Text textshow;
+    int a = 1;
+
     [Header("Compare card list")]
     [SerializeField] private List<Card> cardComparison;//卡牌比對清單
 
@@ -31,12 +42,65 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    void gamemeunopen()
+    {
+        Time.timeScale = 0f;
+        bg.SetActive(true);
+        title.SetActive(true); 
+        startbutton. SetActive(true);
+        intructionbutton. SetActive(true);
+    }
+
+    public void gamemeunclose()
+    {
+        Time.timeScale = 1f;
+        bg.SetActive(false);
+        title.SetActive(false);
+        startbutton.gameObject. SetActive(false);
+        intructionbutton.gameObject. SetActive(false);
+        SceneManager.LoadScene("SampleSceen");
+       
+
+    }
+
+    public void instructionopen()
+    {
+        Time.timeScale = 0f;
+        instruction.SetActive(true);
+        
+    }
+
+    public void instructionclose()
+    {
+        Time.timeScale = 1f;
+        bg.SetActive(false);
+        title.SetActive(false);
+        startbutton.gameObject.SetActive(false);
+        intructionbutton.gameObject.SetActive(false);
+        instruction.SetActive(false);
+        SceneManager.LoadScene("SampleSceen");
+    }
+
+
+
     void Start()
     {
         //SetCardToBePutIn();
         //AddNewCard(Card.CardPattern.apple);
+        gamemeunopen();
         GenerateRandomCards();
     }
+
+    private void Update()
+    {
+        textshow.text = ("你總共花了:"+a+"次點擊");
+    }
+
+    public void grade()
+    {
+        a++;
+    }
+
 
     void SetCardToBePutIn()//enum轉list
     {
@@ -120,6 +184,9 @@ public class GameManager : MonoBehaviour
                 if (matchedCardsCount >= positions.Length)//全部配對成功
                 {
                     StartCoroutine(ReloadScrene());
+                    wait();
+                    win.SetActive(true);
+
                 }
             }
             else
@@ -157,6 +224,11 @@ public class GameManager : MonoBehaviour
     {
         yield return new WaitForSeconds(3);//3秒過後重洗卡牌
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    IEnumerable wait()
+    {
+        yield return new WaitForSeconds(2);
     }
 
 }
